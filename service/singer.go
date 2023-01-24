@@ -26,6 +26,7 @@ func NewSingerService(singerRepository repository.SingerRepository) *singerServi
 
 func (s *singerService) GetSingerListService(ctx context.Context) ([]*model.Singer, error) {
 	singers, err := s.singerRepository.GetAll(ctx)
+	//この処理いる？
 	if err != nil {
 		return nil, err
 	}

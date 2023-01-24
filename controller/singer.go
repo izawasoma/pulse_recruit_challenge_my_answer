@@ -53,12 +53,13 @@ func (c *singerController) GetSingerDetailHandler(w http.ResponseWriter, r *http
 // POST /singers のハンドラー
 func (c *singerController) PostSingerHandler(w http.ResponseWriter, r *http.Request) {
 	var singer *model.Singer
+	//JSONを構造体に
 	if err := json.NewDecoder(r.Body).Decode(&singer); err != nil {
 		err = fmt.Errorf("invalid body param: %w", err)
 		errorHandler(w, r, 400, err.Error())
 		return
 	}
-
+	//登録処理
 	if err := c.service.PostSingerService(r.Context(), singer); err != nil {
 		errorHandler(w, r, 500, err.Error())
 		return
@@ -66,6 +67,7 @@ func (c *singerController) PostSingerHandler(w http.ResponseWriter, r *http.Requ
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	//エンコードしたデータを表示する
 	json.NewEncoder(w).Encode(singer)
 }
 
