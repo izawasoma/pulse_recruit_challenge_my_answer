@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"sync"
+	"sort"
 
 	"github.com/pulse227/server-recruit-challenge-sample/model"
 	"github.com/pulse227/server-recruit-challenge-sample/repository"
@@ -49,6 +50,8 @@ func (r *singerRepository) GetAll(ctx context.Context) ([]*model.Singer, error) 
 	for _, s := range r.singerMap {
 		singers = append(singers, s)
 	}
+	//IDの順番に並べ替え
+	sort.Slice(singers, func(i, j int) bool { return singers[i].ID < singers[j].ID })
 	return singers, nil
 }
 
