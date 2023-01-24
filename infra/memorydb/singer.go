@@ -10,12 +10,18 @@ import (
 )
 
 type singerRepository struct {
+	//データの排他処理に用いる（ロック）
 	sync.RWMutex
-	singerMap map[model.SingerID]*model.Singer // キーが SingerID、値が model.Singer のマップ
+	// キーが SingerID、値が model.Singer のマップ
+	singerMap map[model.SingerID]*model.Singer
 }
 
+//作成する構造体がその型を満たしているかをチェックする
+//https://sourjp.github.io/posts/go-interface/
 var _ repository.SingerRepository = (*singerRepository)(nil)
 
+//コンストラクタ
+//singerRepository.singerMapに初期値を設定している
 func NewSingerRepository() *singerRepository {
 	var initMap = map[model.SingerID]*model.Singer{
 		1: {ID: 1, Name: "Alice"},
@@ -30,10 +36,15 @@ func NewSingerRepository() *singerRepository {
 	}
 }
 
+//func レシーバー メソッド名(型 引数) 返り値の型 { ... }
 func (r *singerRepository) GetAll(ctx context.Context) ([]*model.Singer, error) {
+	//読み込みロック
 	r.RLock()
+	//読み込みロック解除
+	//defer…この関数が実行終了した際に実行する
 	defer r.RUnlock()
 
+	//スライスを作成
 	singers := make([]*model.Singer, 0, len(r.singerMap))
 	for _, s := range r.singerMap {
 		singers = append(singers, s)
@@ -45,6 +56,8 @@ func (r *singerRepository) Get(ctx context.Context, id model.SingerID) (*model.S
 	r.RLock()
 	defer r.RUnlock()
 
+	//該当のidが存在する場合、singerには該当データが入り、okにはnilが入る
+	//一方で該当データが存在しない場合、okにはfalseが入る。
 	singer, ok := r.singerMap[id]
 	if !ok {
 		return nil, errors.New("not found")
@@ -53,14 +66,17 @@ func (r *singerRepository) Get(ctx context.Context, id model.SingerID) (*model.S
 }
 
 func (r *singerRepository) Add(ctx context.Context, singer *model.Singer) error {
+	//書き込みロック
 	r.Lock()
 	r.singerMap[singer.ID] = singer
+	//書き込みロックを解除
 	r.Unlock()
 	return nil
 }
 
 func (r *singerRepository) Delete(ctx context.Context, id model.SingerID) error {
 	r.Lock()
+	//mapからkeyがidに相当するものを削除する
 	delete(r.singerMap, id)
 	r.Unlock()
 	return nil
