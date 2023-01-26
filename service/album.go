@@ -9,7 +9,7 @@ import (
 
 type AlbumService interface {
 	GetAlbumListService(ctx context.Context) ([]*model.AlbumDetail, error)
-	GetAlbumService(ctx context.Context, albumID model.AlbumID) (*model.Album, error)
+	GetAlbumService(ctx context.Context, albumID model.AlbumID) (*model.AlbumDetail, error)
 	PostAlbumService(ctx context.Context, album *model.Album) error
 	DeleteAlbumService(ctx context.Context, albumID model.AlbumID) error
 }
@@ -43,12 +43,17 @@ func (a *albumService) GetAlbumListService(ctx context.Context) ([]*model.AlbumD
 	return albumDetails, nil
 }
 
-func (s *albumService) GetAlbumService(ctx context.Context, albumID model.AlbumID) (*model.Album, error) {
+func (s *albumService) GetAlbumService(ctx context.Context, albumID model.AlbumID) (*model.AlbumDetail, error) {
 	album, err := s.albumRepository.Get(ctx, albumID)
 	if err != nil {
 		return nil, err
 	}
-	return album, nil
+	singer, err := s.singerRepository.Get(ctx, album.SingerID)
+	if err != nil {
+		return nil, err
+	}
+	albumDetail := model.NewAlbumDetail(album.ID,album.Title,singer)
+	return albumDetail, nil
 }
 
 func (s *albumService) PostAlbumService(ctx context.Context, album *model.Album) error {
