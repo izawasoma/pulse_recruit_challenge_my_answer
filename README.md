@@ -1,40 +1,5 @@
 # サーバーエンジニア向け 2024新卒採用事前課題
 
-あなたは歌手とアルバムを管理するAPIの機能開発にたずさわることになりました。
-
-次の課題に順に取り組んでください。
-
-できない課題があっても構いません。
-
-面接中に課題に関して質問をしますので、分かる範囲で説明してください。
-
-## 課題1
-プログラムのコードを読み、中身を把握しましょう。
-
-## 課題2
-go をインストールし(各自で調べてください)、歌手を管理するAPIの動作を確認しましょう。
-
-```
-# (ターミナルを開いて)
-# サーバーを起動する
-go run main.go
-```
-
-```
-# (別のターミナルを開いて)
-# 歌手の一覧を取得する
-curl http://localhost:8888/singers
-
-# 指定したIDの歌手を取得する
-curl http://localhost:8888/singers/1
-
-# 歌手を追加する
-curl -X POST -d '{"id":10,"name":"John"}' http://localhost:8888/singers
-
-# 歌手を削除する
-curl -X DELETE http://localhost:8888/singers/1
-```
-
 ## 課題3
 アルバムを管理するAPIを新規作成しましょう。
 
@@ -98,7 +63,14 @@ curl http://localhost:8888/albums
 ## 課題5
 歌手とそのアルバムを管理するという点で、現状のAPIの改善点を検討し思いつく限り書き出してください。
 
-実装をする必要はありません。
-
 - singer情報を削除した後、albumがヒットしないのでnot foundになってしまう
 - curl http://localhost:8888/albums/aaa のエラーメッセージが404 page not foundになっている
+
+## 学習記録
+
+- [スライスについて](https://github.com/izawasoma/pulse_recruit_challenge_my_answer/blob/main/note/slice.md "スライスについて")
+- [マップについて](https://github.com/izawasoma/pulse_recruit_challenge_my_answer/blob/main/note/map.md "マップについて")
+- [繰り返し制御について](https://github.com/izawasoma/pulse_recruit_challenge_my_answer/blob/main/note/roop.md "繰り返し制御について")
+- [構造体について](https://github.com/izawasoma/pulse_recruit_challenge_my_answer/blob/main/note/struct.md "構造体について")
+- [その他について](https://github.com/izawasoma/pulse_recruit_challenge_my_answer/blob/main/note/other.md "その他について")
+- [デフォルトパッケージについて](https://github.com/izawasoma/pulse_recruit_challenge_my_answer/blob/main/note/default_package.md "デフォルトパッケージについて")
