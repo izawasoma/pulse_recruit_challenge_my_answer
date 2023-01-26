@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"sync"
+	"sort"
 
 	"github.com/pulse227/server-recruit-challenge-sample/model"
 	"github.com/pulse227/server-recruit-challenge-sample/repository"
@@ -36,6 +37,8 @@ func (r *albumRepository) GetAll(ctx context.Context) ([]*model.Album, error) {
 	for _, s := range r.albumMap {
 		albums = append(albums, s)
 	}
+	//IDの順番に並べ替え
+	sort.Slice(albums, func(i, j int) bool { return albums[i].ID < albums[j].ID })
 	return albums, nil
 }
 
